@@ -1,5 +1,5 @@
-busy=0
+busy=85
 
-mood=0
+mood=30
 
-note="Out of the office"
+note="Back to the office"

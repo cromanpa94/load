@@ -2,8 +2,8 @@ name: Update Status from Nextcloud
 
 on:
   schedule:
-    # Run every day at 8 AM UTC (adjust as needed)
-    - cron: '0 10 * * 1-5'
+    # Run every day at X UTC
+    - cron: '0 17 * * 1-5'
   workflow_dispatch: # Allow manual trigger
   push:
     branches:

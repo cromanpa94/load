@@ -1,5 +1,5 @@
 busy=85
 
-mood=40
+mood=50
 
-note="Back to the office"
+note="Catching up with emails..."

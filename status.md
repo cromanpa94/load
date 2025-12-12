@@ -1,5 +1,5 @@
-busy=80
+busy=40
 
 mood=80
 
-note="Almost done cleaning up my inbox. Wrapping my my class today"
+note="Grading final projects!"

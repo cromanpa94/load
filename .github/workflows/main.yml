@@ -110,12 +110,12 @@ jobs:
         echo "$TIMESTAMP,$BUSY,$MOOD,$EFFICIENCY,\"$NOTE\"" >> history.csv
         
         # Keep only last 365 entries (not including header)
-        if [ $(wc -l < history.csv) -gt 366 ]; then
-          echo "Trimming history to last 365 entries"
-          head -n 1 history.csv > history_temp.csv
-          tail -n 365 history.csv >> history_temp.csv
-          mv history_temp.csv history.csv
-        fi
+        #if [ $(wc -l < history.csv) -gt 366 ]; then
+        #  echo "Trimming history to last 365 entries"
+        #  head -n 1 history.csv > history_temp.csv
+        #  tail -n 365 history.csv >> history_temp.csv
+        #  mv history_temp.csv history.csv
+        #fi
         
         # Show the last few lines for debugging
         echo "Last 3 lines of history.csv:"

@@ -81,8 +81,13 @@ jobs:
         BUSY=$(grep -o 'busy[[:space:]]*=[[:space:]]*[0-9]*' status.md | grep -o '[0-9]*')
         MOOD=$(grep -o 'mood[[:space:]]*=[[:space:]]*[0-9]*' status.md | grep -o '[0-9]*')
         
+        # Parse note - handle quotes properly
+        NOTE=$(grep -o 'note[[:space:]]*=[[:space:]]*"[^"]*"' status.md | sed 's/note[[:space:]]*=[[:space:]]*"//' | sed 's/"$//')
+        # Escape any commas in the note for CSV format
+        NOTE=$(echo "$NOTE" | sed 's/,/;/g')
+        
         # Debug: Show parsed values
-        echo "Parsed values - Busy: $BUSY, Mood: $MOOD"
+        echo "Parsed values - Busy: $BUSY, Mood: $MOOD, Note: $NOTE"
         
         # Calculate efficiency
         if [ "$BUSY" = "0" ] && [ "$MOOD" = "0" ]; then
@@ -96,13 +101,25 @@ jobs:
         # Create history.csv if it doesn't exist
         if [ ! -f history.csv ]; then
           echo "Creating new history.csv"
-          echo "timestamp,busy,mood,efficiency" > history.csv
+          echo "timestamp,busy,mood,efficiency,note" > history.csv
         fi
         
         # Append new data
         TIMESTAMP=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-        echo "Adding: $TIMESTAMP,$BUSY,$MOOD,$EFFICIENCY"
-        echo "$TIMESTAMP,$BUSY,$MOOD,$EFFICIENCY" >> history.csv
+        echo "Adding: $TIMESTAMP,$BUSY,$MOOD,$EFFICIENCY,\"$NOTE\""
+        echo "$TIMESTAMP,$BUSY,$MOOD,$EFFICIENCY,\"$NOTE\"" >> history.csv
+        
+        # Keep only last 365 entries (not including header)
+        if [ $(wc -l < history.csv) -gt 366 ]; then
+          echo "Trimming history to last 365 entries"
+          head -n 1 history.csv > history_temp.csv
+          tail -n 365 history.csv >> history_temp.csv
+          mv history_temp.csv history.csv
+        fi
+        
+        # Show the last few lines for debugging
+        echo "Last 3 lines of history.csv:"
+        tail -n 3 history.csv
                    
     - name: Commit and push if changed
       if: steps.check_changes.outputs.changed == 'true'

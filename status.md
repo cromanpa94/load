@@ -1,5 +1,5 @@
-busy=50
+busy=60
 
 mood=80
 
-note="Catching up with emails and revisions on documents"
+note="Manuscript reviews... 😀"

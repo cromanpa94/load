@@ -74,26 +74,15 @@ jobs:
         cat status.md
         echo "================================"
     
-    - name: Commit and push if changed
-      if: steps.check_changes.outputs.changed == 'true'
-      run: |
-        git config --global user.name 'GitHub Action'
-        git config --global user.email 'action@github.com'
-        git add status.md
-        git commit -m "Update status data - $(date +'%Y-%m-%d %H:%M:%S UTC')"
-        git push
-    
-    - name: Clean up
-      if: always()
-      run: |
-        rm -f status_new.md
-
     - name: Update history if changed
       if: steps.check_changes.outputs.changed == 'true'
       run: |
         # Parse current values from status.md
         BUSY=$(grep -o 'busy[[:space:]]*=[[:space:]]*[0-9]*' status.md | grep -o '[0-9]*')
         MOOD=$(grep -o 'mood[[:space:]]*=[[:space:]]*[0-9]*' status.md | grep -o '[0-9]*')
+        
+        # Debug: Show parsed values
+        echo "Parsed values - Busy: $BUSY, Mood: $MOOD"
         
         # Calculate efficiency
         if [ "$BUSY" = "0" ] && [ "$MOOD" = "0" ]; then
@@ -102,15 +91,25 @@ jobs:
           EFFICIENCY=$(( (100 - BUSY + MOOD) / 2 ))
         fi
         
+        echo "Calculated efficiency: $EFFICIENCY"
+        
         # Create history.csv if it doesn't exist
         if [ ! -f history.csv ]; then
+          echo "Creating new history.csv"
           echo "timestamp,busy,mood,efficiency" > history.csv
         fi
         
         # Append new data
-        echo "$(date -u +'%Y-%m-%dT%H:%M:%SZ'),$BUSY,$MOOD,$EFFICIENCY" >> history.csv
-        
-        # Keep only last 365 days of data (optional)
-        tail -n 366 history.csv > history_temp.csv && mv history_temp.csv history.csv
-        
+        TIMESTAMP=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+        echo "Adding: $TIMESTAMP,$BUSY,$MOOD,$EFFICIENCY"
+        echo "$TIMESTAMP,$BUSY,$MOOD,$EFFICIENCY" >> history.csv
+                   
+    - name: Commit and push if changed
+      if: steps.check_changes.outputs.changed == 'true'
+      run: |
+        git config --global user.name 'GitHub Action'
+        git config --global user.email 'action@github.com'
+        git add status.md
         git add history.csv
+        git commit -m "Update status data - $(date +'%Y-%m-%d %H:%M:%S UTC')"
+        git push

@@ -1,5 +1,5 @@
-busy=61
+busy=50
 
-mood=80
+mood=85
 
-note="Manuscript reviews...and YAML update 😀"
+note="Finally touching some code for a paper"

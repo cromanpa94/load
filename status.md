@@ -1,5 +1,5 @@
-busy=50
+busy=40
 
-mood=85
+mood=90
 
-note="Finally touching some code for a paper"
+note="Working on a paper for MEE 😃"

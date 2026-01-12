@@ -2,4 +2,4 @@ busy=40
 
 mood=90
 
-note="Working on a paper for MEE 😃"
+note="Responding to emails and working on ms"

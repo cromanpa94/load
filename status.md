@@ -1,5 +1,5 @@
-busy=40
+busy=35
 
-mood=90
+mood=95
 
-note="Responding to emails and working on ms"
+note="Still responding to emails, working on ms, and catching up with MS advising tasks"
